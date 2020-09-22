@@ -32,5 +32,9 @@ public class MyMvcConfig implements WebMvcConfigurer {
         registry.addViewController("profession/addProfession").setViewName("profession/addProfession");
         registry.addViewController("profession/professionList").setViewName("profession/professionList");
         registry.addViewController("profession/editProfession").setViewName("profession/editProfession");
+        //加载课程相关页面
+        registry.addViewController("course/addCourse").setViewName("course/addCourse");
+        registry.addViewController("course/courseList").setViewName("course/courseList");
+        registry.addViewController("course/editCourse").setViewName("course/editCourse");
     }
 }

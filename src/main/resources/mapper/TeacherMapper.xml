@@ -100,7 +100,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="cn.scoreanalysis.system.model.Teacher">
+  <insert id="insert" parameterType="cn.scoreanalysis.system.model.Teacher" useGeneratedKeys="true" keyProperty="id">
     insert into teacher (id, teachernumber, teachername, 
       teacherage, teachergender, teacheridentitycard
       )

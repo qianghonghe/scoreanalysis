@@ -63,7 +63,7 @@ public class ClassesController {
     @ResponseBody
     @RequestMapping("/selectClassByElective")
     public DataTableUtil selectClassByElective(DataTableUtil dataTableUtil,Classes classes){
-        if (dataTableUtil!=null && classes==null){
+        if (classes.getClassname()==null){
             PageHelper.startPage(dataTableUtil.getPage(),dataTableUtil.getLimit());
             List<Classes> classesList = classesService.getClassList(classes);
             PageInfo pageInfo = new PageInfo(classesList,dataTableUtil.getLimit());
