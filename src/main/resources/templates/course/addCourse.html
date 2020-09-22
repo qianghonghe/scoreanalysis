@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .addForm{
+            width: 300px;
+            position: fixed;
+            left: 50px;
+            top: 60px;
+
+        }
+        .btnCenter{
+            text-align: center;
+            margin-top: 90px;
+        }
+        body{
+            margin-bottom: 20px;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" th:href="@{/layui/css/layui.css}" href="/static/layui/css/layui.css"/>
+</head>
+<body>
+        <div  class="addForm">
+            <form class="layui-form layui-form-pane" method="post"  id="addCourseForm" >
+                <div class="layui-form-item">
+                    <label class="layui-form-label">课程名</label>
+                    <div class="layui-input-inline" >
+                        <input  type="text" id="course" name="course" required  lay-verify="course" placeholder="请输入课程名" autocomplete="off" class="layui-input">
+                    </div>
+                    <label class="layui-form-label">课程性质</label>
+                    <div class="layui-input-inline" >
+                        <input  type="text" id="property" name="property" required  lay-verify="property" placeholder="请输入课程性质" autocomplete="off" class="layui-input">
+                    </div>
+                    <label class="layui-form-label">学分</label>
+                    <div class="layui-input-inline" >
+                        <input  type="text" id="credit" name="credit" required  lay-verify="credit" placeholder="请输入学分" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item btnCenter"  >
+                    <button class="layui-btn" lay-submit lay-filter="addCourse">立即保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">&nbsp;重置&nbsp;</button>
+                </div>
+            </form>
+        </div>
+
+</body>
+<script src="/layui/layui.all.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+
+        //自定义验证规则
+        form.verify({
+            course:(value) => {//箭头函数，相当于passWord验证写法(参数一，参数二)=>{函数体}
+                if(value == ''){
+                    return '课程名必须填写';
+                }
+            },
+            credit:(value) => {//箭头函数，相当于passWord验证写法(参数一，参数二)=>{函数体}
+                if(value == ''){
+                    return '学分必须填写';
+                }
+            },
+            property:(value) => {//箭头函数，相当于passWord验证写法(参数一，参数二)=>{函数体}
+                if(value == ''){
+                    return '课程性质';
+                }
+            }
+        });
+    });
+    layui.use('element', function(){
+        var element = layui.element;
+
+    });
+    layui.use(['form','layer'], function(){
+        var form = layui.form,
+            layer = layui.layer;
+        $ = layui.jquery;
+        //监听提交
+        form.on('submit(addCourse)', function(data){
+            //layer.msg(JSON.stringify(data.field));
+            //return false;
+            //console.log("111111")
+            let courseId = $("#courseId").val();
+            let course = $("#course").val();
+            let property = $("#property").val();
+            let credit = $("#credit").val();
+            $.ajax({
+                url:"/course/insertCourse",
+                type:"POST",
+                data:{"id":courseId,"course":course,"property":property,"credit":credit},
+                success:function (result) {
+                    if(result.code==200){
+                        layer.msg("添加成功！");
+                        setTimeout(function () {
+                            //当你在iframe页面关闭自身时
+                            let index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.location.reload();//刷新父页面
+                            parent.layer.close(index); //再执行关闭
+                        },1000);
+                        //window.location.reload();
+                    }else {
+                        layer.msg("添加失败！")
+                    }
+                },
+                error:function (data) {
+                    layer.msg("添加失败！")
+                }
+            })
+            return false;
+        });
+    });
+</script>
+</html>
