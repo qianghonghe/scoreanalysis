@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .addForm{
+            width: 300px;
+            position: fixed;
+            left: 50px;
+            top: 60px;
+
+        }
+        .btnCenter{
+            text-align: center;
+            margin-top: 90px;
+        }
+        body{
+            margin-bottom: 20px;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" th:href="@{/layui/css/layui.css}" href="/static/layui/css/layui.css"/>
+</head>
+<body>
+<div id="test1" class="demo-tree demo-tree-box">
+    <input type="text" id="userid" name="userid" />
+</div>
+
+</body>
+<script src="/layui/layui.all.js"></script>
+<script>
+    var tree = layui.tree
+        ,layer = layui.layer
+        ,util = layui.util;
+    $ = layui.jquery;
+    //常规用法
+    $(document).ready(function () {
+       // var userid = $("#userid").val();
+        var userid = 22;
+        console.log('userid='+userid)
+        $.ajax({
+            url:'/user/getUserRoleByUserId'
+            ,data:{'userid':userid}
+            ,success:function (result) {
+                let data = result;
+                tree.render({
+                    elem: '#test1' //默认是点击节点可进行收缩
+                    ,data: data
+                });
+            },
+            error:{
+
+            }
+        });
+    });
+    // tree.render({
+    //     elem: '#test1' //默认是点击节点可进行收缩
+    //     ,data: data1
+    // });
+</script>
+</html>

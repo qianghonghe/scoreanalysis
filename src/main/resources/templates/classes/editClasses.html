@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .addForm{
+            width: 300px;
+            position: fixed;
+            left: 50px;
+            top: 60px;
+
+        }
+        .btnCenter{
+            text-align: center;
+            margin-top: 90px;
+        }
+        body{
+            margin-bottom: 20px;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" th:href="@{/layui/css/layui.css}" href="/static/layui/css/layui.css"/>
+</head>
+<body>
+<div class="addForm">
+    <form class="layui-form layui-form-pane " method="post"   >
+        <div class="layui-form-item">
+            <label class="layui-form-label">班级名称</label>
+            <div class="layui-input-inline" >
+                <input  type="text" id="classname" name="classname" required  lay-verify="required"  autocomplete="off" class="layui-input">
+                <input type="hidden" id="classId" name="classId"/>
+            </div>
+        </div>
+        <div class="layui-form-item btnCenter"  >
+            <button class="layui-btn" lay-submit lay-filter="editClass">保存</button>
+        </div>
+    </form>
+</div>
+</body>
+<script src="/layui/layui.all.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate','layer','element'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+        var element = layui.element;
+        $ = layui.jquery;
+        //创建一个编辑器
+
+        //监听提交
+        form.on('submit(editClass)', function(data){
+            let classId = $("#classId").val();
+            let classname = $("#classname").val();
+            $.ajax({
+                url:"/classes/updateClassByPrimaryKey",
+                type:"POST",
+                // contentType: 'application/json',
+                // dataType:"json",
+                // data:JSON.stringify({"username":$("#username").val,"password":$("#password").val}),
+                data:{"id":classId,"classname":classname},
+                success:function (result) {
+                    if(result.code==200){
+                        layer.msg("修改成功！")
+                        //页面跳转
+                        setTimeout(function () {
+                            //当你在iframe页面关闭自身时
+                            let index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.location.reload();//刷新父页面
+                            parent.layer.close(index); //再执行关闭
+                        },1000);
+                    }else {
+                        layer.msg("修改失败！")
+                    }
+                },
+                error:function (data) {
+                    layer.msg("修改失败！")
+                }
+            })
+            return false;
+        });
+
+
+    });
+
+
+
+</script>
+</html>

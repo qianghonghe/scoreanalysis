@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .addForm{
+            width: 300px;
+            position: fixed;
+            left: 50px;
+            top: 60px;
+
+        }
+        .btnCenter{
+            text-align: center;
+            margin-top: 90px;
+        }
+        body{
+            margin-bottom: 20px;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" th:href="@{/layui/css/layui.css}" href="/static/layui/css/layui.css"/>
+</head>
+<body>
+<div class="addForm">
+    <form class="layui-form layui-form-pane " method="post"   >
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline" >
+                <input  type="text" id="username" name="username" required  lay-verify="required" readonly="readonly" autocomplete="off" class="layui-input">
+                <input type="hidden" id="userid" name="userid"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-inline">
+                <select  name="role" lay-verify="required" value="" id="role">
+                    <option>请选择角色</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item btnCenter"  >
+            <button class="layui-btn" lay-submit lay-filter="setRole">保存</button>
+        </div>
+    </form>
+</div>
+</body>
+<script src="/layui/layui.all.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate','layer','element'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+        var element = layui.element;
+        $ = layui.jquery;
+        //创建一个编辑器
+        $(document).ready(function () {
+            //显示所有角色
+            $.ajax({
+                url:'/role/selectRoleLists',
+                success:function(result){
+                    $.each(result.data,function(index,item){
+                        $('#role').append(new Option(item.description,item.id));
+                    });
+                    layui.form.render('select');
+                }
+            })
+        });
+
+        //监听提交
+        form.on('submit(setRole)', function(data){
+            let userid = $("#userid").val();
+            let roleid = $("#role").val();
+            console.log(roleid)
+            $.ajax({
+                url:"/user/setRoleForUser",
+                type:"POST",
+                // contentType: 'application/json',
+                // dataType:"json",
+                // data:JSON.stringify({"username":$("#username").val,"password":$("#password").val}),
+                data:{"userid":userid,"roleid":roleid},
+                success:function (result) {
+                    if(result.code==200){
+                        layer.msg("添加成功！")
+                        //页面跳转
+                        setTimeout(function () {
+                            //当你在iframe页面关闭自身时
+                            let index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.location.reload();//刷新父页面
+                            parent.layer.close(index); //再执行关闭
+                        },1000);
+                    }else {
+                        layer.msg("添加失败！")
+                    }
+                },
+                error:function (data) {
+                    layer.msg("添加失败！")
+                }
+            })
+            return false;
+        });
+
+
+    });
+
+
+
+</script>
+</html>

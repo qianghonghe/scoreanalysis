@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/layui/css/layui.css}" href="/static/layui/css/layui.css"/>
+</head>
+<body class="layui-layout-body">
+<!-- 引入的格式：~{公共页面的地址/页面名称::公共页面定义的唯一标识}-->
+    <div class="layui-layout layui-layout-admin">
+        <div th:replace="~{common/header::copyheader}"></div>
+        <div th:replace="~{common/aside::copy}"></div>
+        <div th:replace="~{common/footer::footer}"></div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md6 layui-col-md-offset6">
+            <div class="layui-form-item">
+                <label class="layui-form-label">验证必填项</label>
+                <div class="layui-input-block">
+                    <input type="text" name="username" lay-verify="required" lay-reqtext="用户名是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                    <input type="password" name="password" lay-verify="pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="/layui/layui.all.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+
+
+
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+
+        //自定义验证规则
+        form.verify({
+            title: function(value){
+                if(value.length < 5){
+                    return '标题至少得5个字符啊';
+                }
+            }
+            ,pass: [
+                /^[\S]{6,12}$/
+                ,'密码必须6到12位，且不能出现空格'
+            ]
+            ,content: function(value){
+                layedit.sync(editIndex);
+            }
+        });
+
+
+
+    });
+</script>
+</html>

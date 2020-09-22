@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/layui/css/layui.css}" href="/static/layui/css/layui.css"/>
+</head>
+<body class="layui-layout-body">
+<!-- 引入的格式：~{公共页面的地址/页面名称::公共页面定义的唯一标识}-->
+    <div class="layui-layout layui-layout-admin">
+        <div th:replace="~{common/header::copyheader}"></div>
+        <div th:replace="~{common/aside::copy}"></div>
+        <div th:replace="~{common/footer::footer}"></div>
+    </div>
+
+</body>
+<script src="/layui/layui.all.js"></script>
+</html>
